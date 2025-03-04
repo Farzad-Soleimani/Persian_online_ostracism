@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>جدول رتبه‌بندی شرکت‌کنندگان</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      direction: rtl;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 80%;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 10px;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>جدول رتبه‌بندی شرکت‌کنندگان</h1>
+  <div id="rankingTable"></div>
+  
+  <script>
+    // تابعی برای استخراج پارامترهای URL
+    function getUrlParameter(sParam) {
+      var sPageURL = window.location.search.substring(1),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+      for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] === sParam) {
+              return decodeURIComponent(sParameterName[1]);
+          }
+      }
+      return null;
+    }
+
+    // دریافت نام کاربری واقعی از URL (کلید "u")؛ در صورت عدم وجود، از "شما" استفاده می‌شود.
+    var userNameFromURL = getUrlParameter('u');
+
+    // تعریف پروفایل‌های دیگر (local) بر اساس اطلاعات داده شده
+    var profiles = [
+      {
+        "username": "AmirH",
+        "likes": [45000, 50000, 110000, 150000] // 4 likes
+      },
+      {
+        "username": "Yasaman",
+        "likes": [12000, 14000, 35000, 80000, 100000] // 5 likes
+      },
+      {
+        "username": "Reza",
+        "likes": [15000, 30000, 60000, 90000, 120000, 160000] // 6 likes
+      },
+      {
+        "username": "Samira",
+        "likes": [10000, 12000, 40000, 80000] // 4 likes
+      },
+      {
+        "username": "Kaveh",
+        "likes": [40000, 45000, 90000, 100000, 150000] // 5 likes
+      },
+      {
+        "username": "MarMar",
+        "likes": [20000, 25000, 95000] // 3 likes
+      },
+      {
+        "username": "Aliz",
+        "likes": [10000, 28000, 60000, 110000, 160000] // 5 likes
+      },
+      {
+        "username": "Mobi",
+        "likes": [10000, 50000, 88000, 110000, 115000, 120000, 150000] // 7 likes
+      }
+    ];
+
+    // تعریف پروفایل کاربر واقعی با تعداد لایک ۱ (یک عضو در آرایه)
+    var myProfile = {
+      "username": userNameFromURL ? userNameFromURL : "شما",
+      "likes": [0]  // 1 like
+    };
+
+    // افزودن پروفایل کاربر واقعی به آرایه
+    profiles.push(myProfile);
+
+    // محاسبه تعداد لایک (تعداد عناصر آرایه likes) برای هر پروفایل
+    profiles.forEach(function(profile) {
+      profile.likeCount = (profile.likes && Array.isArray(profile.likes)) ? profile.likes.length : 0;
+    });
+
+    // مرتب‌سازی پروفایل‌ها به صورت نزولی بر اساس تعداد لایک
+    profiles.sort(function(a, b) {
+      return b.likeCount - a.likeCount;
+    });
+
+    // ساخت HTML جدول رتبه‌بندی
+    var tableHTML = '<table>';
+    tableHTML += '<thead><tr><th>رتبه</th><th>شرکت‌کننده</th><th>تعداد لایک</th></tr></thead>';
+    tableHTML += '<tbody>';
+    profiles.forEach(function(profile, index) {
+      tableHTML += '<tr><td>' + (index + 1) + '</td><td>' + profile.username + '</td><td>' + profile.likeCount + '</td></tr>';
+    });
+    tableHTML += '</tbody></table>';
+
+    // قرار دادن جدول در صفحه
+    document.getElementById('rankingTable').innerHTML = tableHTML;
+  </script>
+</body>
+</html>
